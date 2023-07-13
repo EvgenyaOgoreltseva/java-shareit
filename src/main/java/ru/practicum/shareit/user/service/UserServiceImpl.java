@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getUserById(int userId) {
-        log.info("");
+        log.info("Получен пользователь с ID: " + userId);
         return toUserDto(userRepository.getUserById(userId));
     }
 
