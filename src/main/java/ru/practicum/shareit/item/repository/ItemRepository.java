@@ -15,25 +15,24 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ItemRepository {
 
-    private final Map<Integer, Item> items ;
+    private final Map<Integer, Item> items;
     private int id = 1;
 
-    private int incrementId (){
+    private int incrementId() {
         return id++;
     }
 
-    public List<Item> findAllItems(){
-
+    public List<Item> findAllItems() {
         return new ArrayList<>(items.values());
     }
 
-    public Item createItem(Item item){
+    public Item createItem(Item item) {
         item.setId(incrementId());
-        items.put(item.getId(),item);
+        items.put(item.getId(), item);
         return item;
     }
 
-    public Item updateItem (Item item){
+    public Item updateItem(Item item) {
         if (!items.containsKey(item.getId())) {
             throw new NotFoundException("Вещь не найдена!");
         }

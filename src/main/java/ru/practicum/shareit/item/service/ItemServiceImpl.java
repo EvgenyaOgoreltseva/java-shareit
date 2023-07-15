@@ -21,7 +21,7 @@ import static ru.practicum.shareit.item.mapper.ItemMapper.*;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class ItemServiceImpl implements ItemService{
+public class ItemServiceImpl implements ItemService {
 
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
@@ -36,7 +36,7 @@ public class ItemServiceImpl implements ItemService{
     @Override
     public ItemDto createItem(ItemDto itemDto, int userId) {
         User owner = userRepository.getUserById(userId);
-        Item item = toItem(itemDto,owner);
+        Item item = toItem(itemDto, owner);
         checkItems(item);
         log.info("Вещь добавлена.");
         return toItemDto(itemRepository.createItem(item));
@@ -45,7 +45,7 @@ public class ItemServiceImpl implements ItemService{
     @Override
     public ItemDto updateItem(int itemId, ItemDto itemDto, Integer userId) {
         Item item = itemRepository.getItemById(itemId);
-        if (!userId.equals(item.getOwner().getId()) ) {
+        if (!userId.equals(item.getOwner().getId())) {
             throw new NotFoundException("Неверный ID вещи.");
         }
         if (itemDto.getName() != null) {
@@ -63,7 +63,7 @@ public class ItemServiceImpl implements ItemService{
 
     @Override
     public ItemDto getItemById(int itemId) {
-        log.info("Получена вещь с ID: " + itemId );
+        log.info("Получена вещь с ID: " + itemId);
         return toItemDto(itemRepository.getItemById(itemId));
     }
 
@@ -78,7 +78,7 @@ public class ItemServiceImpl implements ItemService{
 
     @Override
     public List<ItemDto> getItemByText(String text) {
-        if (text.isBlank() || text.isEmpty() ) {
+        if (text.isBlank() || text.isEmpty()) {
             return new ArrayList<>();
         }
         log.info("Найдена вещь по ключевому слову: " + text);
@@ -90,7 +90,7 @@ public class ItemServiceImpl implements ItemService{
                 .collect(Collectors.toList());
     }
 
-    private void checkItems (Item item){
+    private void checkItems(Item item) {
         if (item.getAvailable() == null || item.getName().isBlank() || item.getDescription() == null ||
                 item.getDescription().isBlank() || item.getName() == null) {
             throw new ValidationException("Неверные данные.");

@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService {
         boolean emailExists = userRepository.findAllUsers().stream()
                 .filter(u -> u.getId() != user.getId())
                 .anyMatch(u -> u.getEmail().equals(user.getEmail()));
-        if (emailExists){
+        if (emailExists) {
             throw new RuntimeException("Пользователь с таким адресом электронной почты уже существует.");
         }
     }

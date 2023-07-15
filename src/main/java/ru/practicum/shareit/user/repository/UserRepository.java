@@ -13,29 +13,28 @@ import java.util.Map;
 @RequiredArgsConstructor
 
 public class UserRepository {
-    private final Map<Integer, User> users ;
+    private final Map<Integer, User> users;
     private int id = 1;
 
-    private int incrementId(){
+    private int incrementId() {
         return id++;
     }
 
-    public List<User> findAllUsers(){
-
+    public List<User> findAllUsers() {
         return new ArrayList<>(users.values());
     }
 
-    public User createUser (User user){
+    public User createUser(User user) {
         user.setId(incrementId());
-        users.put(user.getId(),user);
+        users.put(user.getId(), user);
         return user;
     }
 
-    public User updateUser (User user){
-        if (!users.containsKey(user.getId())){
+    public User updateUser(User user) {
+        if (!users.containsKey(user.getId())) {
             throw new NotFoundException("Пользователя с id " + user.getId() + " не найдено");
         }
-        users.put(user.getId(),user);
+        users.put(user.getId(), user);
         return user;
     }
 

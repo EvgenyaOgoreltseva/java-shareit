@@ -1,6 +1,5 @@
 package ru.practicum.shareit.error;
 
-
 public class ErrorResponse {
     private String message;
 

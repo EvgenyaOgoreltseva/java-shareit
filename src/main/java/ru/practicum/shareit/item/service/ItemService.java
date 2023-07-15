@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 public interface ItemService {
 
     List<ItemDto> findAllItems();
+
     ItemDto createItem(ItemDto itemDto, int userId);
 
     ItemDto updateItem(int itemId, ItemDto itemDto, Integer userId);
@@ -18,7 +19,7 @@ public interface ItemService {
 
     List<ItemDto> getItemByUserId(int userId);
 
-    List<ItemDto> getItemByText(String text) ;
+    List<ItemDto> getItemByText(String text);
 
 
 }
