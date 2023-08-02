@@ -8,11 +8,11 @@ import java.util.List;
 
 public interface BookingService {
 
-    BookingDto createBooking(BookingRequestDto bookingRequestDto, Long userId);
+    BookingDto create(Long userId, BookingRequestDto bookingRequestDto);
 
-    BookingDto updateBooking(Long userId, Long bookingId, Boolean approved);
+    BookingDto update(Long id, Long userId, boolean approved);
 
-    BookingDto findById(Long bookingId, Long userId);
+    BookingDto findById(Long id, Long userId);
 
     List<BookingDto> findByBooker(Long userId, BookingState state);
 

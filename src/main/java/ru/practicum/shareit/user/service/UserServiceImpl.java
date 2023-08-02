@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import ru.practicum.shareit.error.EmailAlreadyExistException;
-import ru.practicum.shareit.error.NotFoundException;
+import ru.practicum.shareit.error.ModelNotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
             checkEmailExistException(userDto.getEmail());
         }
         log.info("Данные пользователя обновлены.");
-        return toUserDto(userRepository.save(updateUserFields(user, userDto)));
+        return toUserDto(userRepository.save(checksUser(user, userDto)));
     }
 
     @Override
@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
         log.info("Пользователь удален.");
     }
 
-    private User updateUserFields(User user, UserDto userDto) {
+    private User checksUser(User user, UserDto userDto) {
         if (userDto.getName() != null && !userDto.getName().equals(user.getName())) {
             user.setName(userDto.getName());
         }
@@ -93,7 +93,7 @@ public class UserServiceImpl implements UserService {
 
     private User getById(Long userId) {
         return userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException(
+                .orElseThrow(() -> new ModelNotFoundException(
                         String.format("Пользователь с id - %d не найден!", userId)
                 ));
     }

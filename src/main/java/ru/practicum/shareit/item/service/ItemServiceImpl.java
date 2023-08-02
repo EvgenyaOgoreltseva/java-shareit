@@ -10,8 +10,9 @@ import ru.practicum.shareit.booking.dto.BookingShortDto;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.repository.BookingRepository;
-import ru.practicum.shareit.error.BadRequestException;
-import ru.practicum.shareit.error.NotFoundException;
+import ru.practicum.shareit.error.InvalidBookingException;
+import ru.practicum.shareit.error.ModelNotFoundException;
+import ru.practicum.shareit.error.UserHaveNotAccessException;
 import ru.practicum.shareit.item.comment.dto.CommentDto;
 import ru.practicum.shareit.item.comment.dto.CommentRequestDto;
 import ru.practicum.shareit.item.comment.mapper.CommentMapper;
@@ -57,7 +58,7 @@ public class ItemServiceImpl implements ItemService {
         User user = getUserById(userId);
         Item createItem = toItem(itemDto);
         createItem.setOwner(user);
-        log.info("Item added.");
+        log.info("Вещь добавлена");
         return toItemDto(itemRepository.save(createItem));
     }
 
@@ -66,10 +67,10 @@ public class ItemServiceImpl implements ItemService {
     public ItemDto updateItem(Long itemId, ItemDto itemDto, Long userId) {
         Item item = getById(itemId);
         if (!Objects.equals(item.getOwner().getId(), userId)) {
-            throw new NotFoundException("Неверный ID пользователя.");
+            throw new UserHaveNotAccessException("Неверный ID пользователя.");
         }
-        Item updatedItem = itemRepository.save(updateItemFields(item, itemDto));
-        log.info("Предмет - {} с id - {} обновлен!", updatedItem.getName(), updatedItem.getId());
+        Item updatedItem = itemRepository.save(checksItems(item, itemDto));
+        log.info("Вещь с id " + updatedItem.getId() + " обновлена");
         return ItemMapper.toItemDto(updatedItem);
     }
 
@@ -87,7 +88,7 @@ public class ItemServiceImpl implements ItemService {
         }
         List<Comment> comments = commentRepository.findByItemId(itemId);
 
-        log.info("Предмет - {} с id - {} запрошен!", item.getName(), item.getId());
+        log.info("Вещь с id " + item.getName() + " запрошена");
 
         return ItemMapper.toItemDtoResponse(item, nextBooking, lastBooking, CommentMapper.listToDtoList(comments));
     }
@@ -98,7 +99,7 @@ public class ItemServiceImpl implements ItemService {
     public List<ItemDtoResponse> getItemListByUserId(Long userId) {
         List<Item> items = itemRepository.findAllByOwnerIdOrderById(userId);
         if (items.isEmpty()) {
-            log.info("Список предметов пользователя с id {} пуст!", userId);
+            log.info("Список вещей пользователя с id " + userId + " пустой");
             return Collections.emptyList();
         }
         log.info("Получен список всех вещей пользователя с ID: " + userId);
@@ -109,15 +110,15 @@ public class ItemServiceImpl implements ItemService {
     @Transactional(readOnly = true)
     public List<ItemDto> search(String query) {
         if (query.isBlank()) {
-            log.info("Пустой параметр запроса!");
+            log.info("Пустой параметр запроса");
             return Collections.emptyList();
         }
         List<Item> items = itemRepository.search(query);
         if (items.isEmpty()) {
-            log.info("По заданному порядку букв - {} предметов не найдено!", query);
+            log.info("По заданным буквам " + query + " вещей не найдено");
             return Collections.emptyList();
         }
-        log.info("Получен список предметов соответсвующий поиску по заданному порядку букв - {}!", query);
+        log.info("Получен список вещей по заданному порядку букв " + query);
         return ItemMapper.getListItemDto(items);
     }
 
@@ -128,9 +129,7 @@ public class ItemServiceImpl implements ItemService {
         User user = getUserById(userId);
         Booking booking = bookingRepository.findTopByItemIdAndBookerIdAndStatusAndEndIsBefore(
                         itemId, userId, BookingStatus.APPROVED, LocalDateTime.now())
-                .orElseThrow(() -> new BadRequestException(
-                        String.format("Пользователь с id - %d предмет с id - %d ранее не бронировал!",
-                                userId, itemId)));
+                .orElseThrow(() -> new InvalidBookingException("Пользователь с id " + userId + " ранее не бронировал вещь с id " + itemId));
 
         Comment comment = CommentMapper.toComment(item, user, commentRequestDto.getText());
 
@@ -139,15 +138,15 @@ public class ItemServiceImpl implements ItemService {
 
     private User getUserById(Long userId) {
         return userRepository.findById(userId).orElseThrow(() ->
-                new NotFoundException("Неверный ID пользователя."));
+                new ModelNotFoundException("Неверный ID пользователя."));
     }
 
     private Item getById(Long itemId) {
         return itemRepository.findById(itemId).orElseThrow(() ->
-                new NotFoundException("Неверный ID."));
+                new ModelNotFoundException("Неверный ID."));
     }
 
-    private Item updateItemFields(Item item, ItemDto itemDto) {
+    private Item checksItems(Item item, ItemDto itemDto) {
         if (itemDto.getName() != null && !itemDto.getName().equals(item.getName())) {
             item.setName(itemDto.getName());
         }
@@ -165,7 +164,7 @@ public class ItemServiceImpl implements ItemService {
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<Item>> violations = validator.validate(item);
         if (!violations.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Переданы некорректные данные для обновления!");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Переданы некорректные данные");
         }
     }
 
