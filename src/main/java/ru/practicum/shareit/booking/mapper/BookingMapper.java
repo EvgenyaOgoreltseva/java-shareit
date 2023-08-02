@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @UtilityClass
 public class BookingMapper {
 
-    public static BookingDto toBookingDto(Booking booking){
+    public static BookingDto toBookingDto(Booking booking) {
         return BookingDto.builder()
                 .id(booking.getId())
                 .item(ItemMapper.toItemDtoShort(booking.getItem()))
@@ -28,7 +28,7 @@ public class BookingMapper {
                 .build();
     }
 
-    public static Booking toBooking (BookingRequestDto bookingRequestDto , User user , Item item){
+    public static Booking toBooking(BookingRequestDto bookingRequestDto, User user, Item item) {
         return Booking.builder()
                 .item(item)
                 .booker(user)
@@ -38,7 +38,7 @@ public class BookingMapper {
                 .build();
     }
 
-    public static List<BookingDto> getListOfBookingDto (List<Booking> bookings){
+    public static List<BookingDto> getListOfBookingDto(List<Booking> bookings) {
         return bookings.stream()
                 .map(BookingMapper::toBookingDto)
                 .collect(Collectors.toList());
