@@ -26,24 +26,25 @@ import static ru.practicum.shareit.booking.mapper.BookingMapper.*;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class BookingServiceImpl implements BookingService{
+public class BookingServiceImpl implements BookingService {
 
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
     private final BookingRepository bookingRepository;
+
     @Override
     @Transactional
     public BookingDto createBooking(BookingRequestDto bookingRequestDto, Long userId) {
         User booker = getUserById(userId);
         Item item = getItemById(bookingRequestDto.getItemId());
 
-        if (item.getOwner().getId().equals(userId)){
+        if (item.getOwner().getId().equals(userId)) {
             throw new NotFoundException("Невозможно забронировать собственную вещь.");
         }
-        if (!item.getAvailable()){
+        if (!item.getAvailable()) {
             throw new BadRequestException("Вещь уже забронирована!");
         }
-        Booking booking = toBooking(bookingRequestDto,booker,item);
+        Booking booking = toBooking(bookingRequestDto, booker, item);
         log.info("Бронирование добавлено.");
         return toBookingDto(bookingRepository.save(booking));
     }
@@ -53,7 +54,7 @@ public class BookingServiceImpl implements BookingService{
     public BookingDto updateBooking(Long userId, Long bookingId, Boolean approved) {
         Booking booking = getBookingById(bookingId);
 
-        if (!booking.getItem().getOwner().getId().equals(userId)){
+        if (!booking.getItem().getOwner().getId().equals(userId)) {
             throw new NotFoundException("Невозможно изменить бронирование.");
         }
         if (booking.getStatus() == BookingStatus.APPROVED) {
@@ -72,7 +73,7 @@ public class BookingServiceImpl implements BookingService{
 
     @Override
     @Transactional(readOnly = true)
-    public BookingDto findById(Long bookingId, Long userId){
+    public BookingDto findById(Long bookingId, Long userId) {
         Booking booking = getBookingById(bookingId);
         if (booking.getItem().getOwner().getId().equals(userId) || booking.getBooker().getId().equals(userId)) {
             return BookingMapper.toBookingDto(booking);
@@ -87,7 +88,7 @@ public class BookingServiceImpl implements BookingService{
     public List<BookingDto> findByBooker(Long userId, BookingState state) {
         getUserById(userId);
         List<Booking> bookings;
-        switch (state){
+        switch (state) {
             case ALL:
                 bookings = bookingRepository.findAllByBookerIdOrderByStartDesc(userId);
                 break;
@@ -103,7 +104,7 @@ public class BookingServiceImpl implements BookingService{
                 bookings = bookingRepository.findAllByBookerIdAndStartIsAfterOrderByStartDesc(userId, LocalDateTime.now());
                 break;
             case REJECTED:
-                bookings = bookingRepository.findAllByBookerIdAndStatusOrderByStartDesc(userId,BookingStatus.REJECTED);
+                bookings = bookingRepository.findAllByBookerIdAndStatusOrderByStartDesc(userId, BookingStatus.REJECTED);
                 break;
             case WAITING:
                 bookings = bookingRepository.findAllByBookerIdAndStatusOrderByStartDesc(userId, BookingStatus.WAITING);
@@ -148,16 +149,16 @@ public class BookingServiceImpl implements BookingService{
         return getListOfBookingDto(bookings);
     }
 
-    private User getUserById(Long userId){
-        return userRepository.findById(userId).orElseThrow(()-> new NotFoundException("Неверный ID пользователя."));
+    private User getUserById(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Неверный ID пользователя."));
     }
 
-    private Item getItemById(Long itemId){
-        return itemRepository.findById(itemId).orElseThrow(()->new NotFoundException("Неверный ID."));
+    private Item getItemById(Long itemId) {
+        return itemRepository.findById(itemId).orElseThrow(() -> new NotFoundException("Неверный ID."));
     }
 
-    private Booking getBookingById(Long bookingId){
-        return bookingRepository.findById(bookingId).orElseThrow(()-> new NotFoundException("Бронирование на найдено!."));
+    private Booking getBookingById(Long bookingId) {
+        return bookingRepository.findById(bookingId).orElseThrow(() -> new NotFoundException("Бронирование на найдено!."));
     }
 
 }

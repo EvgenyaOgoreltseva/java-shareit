@@ -136,14 +136,17 @@ public class ItemServiceImpl implements ItemService {
 
         return CommentMapper.toCommentDto(commentRepository.save(comment));
     }
+
     private User getUserById(Long userId) {
         return userRepository.findById(userId).orElseThrow(() ->
                 new NotFoundException("Неверный ID пользователя."));
     }
+
     private Item getById(Long itemId) {
         return itemRepository.findById(itemId).orElseThrow(() ->
                 new NotFoundException("Неверный ID."));
     }
+
     private Item updateItemFields(Item item, ItemDto itemDto) {
         if (itemDto.getName() != null && !itemDto.getName().equals(item.getName())) {
             item.setName(itemDto.getName());

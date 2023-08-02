@@ -11,6 +11,7 @@ public interface BookingService {
     BookingDto createBooking(BookingRequestDto bookingRequestDto, Long userId);
 
     BookingDto updateBooking(Long userId, Long bookingId, Boolean approved);
+
     BookingDto findById(Long bookingId, Long userId);
 
     List<BookingDto> findByBooker(Long userId, BookingState state);

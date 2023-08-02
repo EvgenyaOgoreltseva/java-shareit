@@ -29,19 +29,19 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
-    public UserDto updateUser(@PathVariable (value = "id")  Long id, @RequestBody UserDto userDto) {
+    public UserDto updateUser(@PathVariable(value = "id") Long id, @RequestBody UserDto userDto) {
         log.info("Данные пользователя с id: " + id + "обновлены.");
-        return userService.updateUser(id,userDto);
+        return userService.updateUser(id, userDto);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable (value = "id")  Long id) {
+    public void deleteUser(@PathVariable(value = "id") Long id) {
         log.info("Пользователь с id: " + id + " удален.");
         userService.deleteUser(id);
     }
 
     @GetMapping("/{id}")
-    public UserDto getUserById(@PathVariable (value = "id")  Long id) {
+    public UserDto getUserById(@PathVariable(value = "id") Long id) {
         log.info("Получен пользователь с ID: " + id);
         return userService.getUserById(id);
     }

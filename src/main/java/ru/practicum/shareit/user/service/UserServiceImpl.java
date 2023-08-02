@@ -66,6 +66,7 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(userId);
         log.info("Пользователь удален.");
     }
+
     private User updateUserFields(User user, UserDto userDto) {
         if (userDto.getName() != null && !userDto.getName().equals(user.getName())) {
             user.setName(userDto.getName());

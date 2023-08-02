@@ -47,7 +47,7 @@ public class ItemController {
     }
 
     @GetMapping("/search")
-    public List<ItemDto> search(@RequestParam (value = "text")String text) {
+    public List<ItemDto> search(@RequestParam(value = "text") String text) {
         log.info("Найдена вещь по ключевому слову: " + text);
         return itemService.search(text);
     }

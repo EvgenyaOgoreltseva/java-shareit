@@ -19,6 +19,7 @@ public class BookingRequestDto {
     private LocalDateTime end;
     @NotNull
     private Long itemId;
+
     @AssertTrue
     private boolean isEndAfterStart() {
         return start == null || end == null || end.isAfter(start);
