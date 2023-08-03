@@ -29,7 +29,7 @@ public class BookingController {
     public BookingDto update(@PathVariable(value = "id") Long id,
                              @RequestHeader(value = "X-Sharer-User-Id") Long userId,
                              @RequestParam(value = "approved") boolean approved) {
-        log.info("Обновление бронирования для пользователя с id " + userId );
+        log.info("Обновление бронирования для пользователя с id " + userId);
         return bookingService.update(id, userId, approved);
     }
 
