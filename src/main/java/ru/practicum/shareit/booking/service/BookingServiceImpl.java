@@ -43,6 +43,7 @@ public class BookingServiceImpl implements BookingService {
         }
 
         Booking booking = BookingMapper.toBooking(bookingRequestDto, booker, item);
+        log.info("Бронирование для пользователя с id " + userId + " создано");
         return BookingMapper.toBookingDto(bookingRepository.save(booking));
     }
 
@@ -63,6 +64,7 @@ public class BookingServiceImpl implements BookingService {
             booking.setStatus(BookingStatus.REJECTED);
         }
         Booking updatedBooking = bookingRepository.save(booking);
+        log.info("Обновление бронирования для пользователя с id " + userId);
         return BookingMapper.toBookingDto(updatedBooking);
     }
 
@@ -71,6 +73,7 @@ public class BookingServiceImpl implements BookingService {
     public BookingDto findById(Long id, Long userId) {
         Booking booking = getBookingById(id);
         if (booking.getItem().getOwner().getId().equals(userId) || booking.getBooker().getId().equals(userId)) {
+            log.info("Бронирование с id " + id + " найдено");
             return BookingMapper.toBookingDto(booking);
         } else {
             throw new ModelNotFoundException("Невозможно получить информацию о вещи");
@@ -111,6 +114,7 @@ public class BookingServiceImpl implements BookingService {
             default:
                 throw new InvalidBookingException("Unknown state: " + state);
         }
+        log.info("Получен список всех бронирований пользователя с id " + userId);
         return BookingMapper.getListOfBookingDto(bookings);
     }
 
@@ -149,6 +153,7 @@ public class BookingServiceImpl implements BookingService {
                 throw new InvalidBookingException("Unknown state: " + state);
 
         }
+        log.info("Получен список всех бронирований для всех вещей пользователя с id " + userId);
         return BookingMapper.getListOfBookingDto(bookings);
     }
 
