@@ -18,7 +18,7 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleNotFoundExceptions(final RuntimeException e) {
         log.error("Model Not Found Exception");
-        return new ErrorResponse("Данные отсутствуют!", e.getMessage());
+        return new ErrorResponse(e.getMessage(), e.getMessage());
     }
 
     @ExceptionHandler({EmailAlreadyExistException.class})
