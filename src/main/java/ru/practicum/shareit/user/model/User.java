@@ -6,7 +6,9 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
-@Data
+
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -25,4 +27,5 @@ public class User {
     @Email
     @Column(name = "email", unique = true)
     private String email;
+
 }
