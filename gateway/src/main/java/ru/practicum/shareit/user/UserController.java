@@ -44,8 +44,6 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<Object> findAllUsers() {
-
-        log.info("Get all users");
         return userClient.findAllUsers();
     }
 }
