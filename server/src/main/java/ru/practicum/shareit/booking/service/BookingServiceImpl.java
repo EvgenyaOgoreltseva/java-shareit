@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingRequestDto;
-import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingState;
 import ru.practicum.shareit.booking.repository.BookingRepository;
@@ -80,7 +79,7 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = getBookingById(id);
         if (booking.getItem().getOwner().getId().equals(userId) || booking.getBooker().getId().equals(userId)) {
             log.info("Бронирование с id " + id + " найдено");
-            return BookingMapper.toBookingDto(booking);
+            return toBookingDto(booking);
         } else {
             throw new ModelNotFoundException("Невозможно получить информацию о вещи");
         }
