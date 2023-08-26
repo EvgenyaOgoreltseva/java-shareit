@@ -23,21 +23,21 @@ public class BookingController {
     @PostMapping
     public ResponseEntity<Object> createBooking(@RequestHeader("X-Sharer-User-Id") long userId,
                                               @RequestBody @Valid BookItemRequestDto requestDto) {
-        log.info("Creating booking {}, userId={}", requestDto, userId);
+        log.info("Бронирование для пользователя с id " + userId + " создано");
         return bookingClient.createBooking(userId, requestDto);
     }
 
     @PatchMapping("/{bookingId}")
     ResponseEntity<Object> updateBooking(@PathVariable Long bookingId, @RequestHeader("X-Sharer-User-Id") Long userId,
                                          @RequestParam Boolean approved) {
-        log.info("Update booking {}, userId={}", bookingId, userId);
+        log.info("Обновление бронирования для пользователя с id " + userId);
         return bookingClient.updateBooking(bookingId, userId, approved);
     }
 
     @GetMapping("/{bookingId}")
     public ResponseEntity<Object> findBookingByUserId(@RequestHeader("X-Sharer-User-Id") long userId,
                                           @PathVariable Long bookingId) {
-        log.info("Get booking {}, userId={}", bookingId, userId);
+        log.info("Бронирование с id " + bookingId + " найдено");
         return bookingClient.findBookingByUserId(userId, bookingId);
     }
 
@@ -49,7 +49,7 @@ public class BookingController {
 
         BookingState state = BookingState.from(stateParam)
                 .orElseThrow(() -> new IllegalArgumentException("Unknown state: " + stateParam));
-        log.info("Get booking with state {}, userId={}, from={}, size={}", stateParam, userId, from, size);
+        log.info("Получен список всех бронирований пользователя с id " + userId);
         return bookingClient.findByBooker(userId, state, from, size);
     }
 
@@ -61,8 +61,7 @@ public class BookingController {
 
         BookingState state = BookingState.from(stateParam)
                 .orElseThrow(() -> new IllegalArgumentException("Unknown state: " + stateParam));
-        log.info("Get booking with state {}, userId={}, from={}, size={}", stateParam, userId, from, size);
-
+        log.info("Получен список всех бронирований для всех вещей пользователя с id " + userId);
         return bookingClient.findByOwner(userId, state, from, size);
     }
 }

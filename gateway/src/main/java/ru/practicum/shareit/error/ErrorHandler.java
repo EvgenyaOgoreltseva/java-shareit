@@ -16,28 +16,28 @@ public class ErrorHandler {
     @ExceptionHandler({MethodArgumentNotValidException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleMethodArgumentNotValidExceptions(final MethodArgumentNotValidException e) {
-        log.info("Получен статус 400 BadRequest {}", e.getMessage());
+        log.info("Argument Not Valid Exception");
         return new ErrorResponse("Передан некорректный объект!", e.getMessage());
     }
 
     @ExceptionHandler({ConstraintViolationException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleConstraintViolationException(final ConstraintViolationException e) {
-        log.info("Получен статус 400 BadRequest {}", e.getMessage());
+        log.info("Constraint Violation Exception");
         return new ErrorResponse("Передан некорректный объект!", e.getMessage());
     }
 
     @ExceptionHandler({IllegalArgumentException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleIllegalArgumentException(final IllegalArgumentException e) {
-        log.info("Получен статус 400 BadRequest {}", e.getMessage());
+        log.info("Illegal Argument Exception");
         return new ErrorResponse(e.getMessage(), e.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleNotSpecializedExceptions(final Exception e) {
-        log.info("Получен статус 500 InternalServerError {}", e.getMessage());
+        log.info("Internal Server Error");
         return new ErrorResponse("Неизвестная ошибка!", e.getMessage());
     }
 }

@@ -22,20 +22,20 @@ public class ItemController {
 
     @PostMapping
     ResponseEntity<Object> createItem(@RequestHeader("X-Sharer-User-Id") Long userId, @RequestBody @Valid ItemDto itemDto) {
-        log.info("Create item {}", itemDto);
+        log.info("Товар создан с владельцем id: " + userId);
         return itemClient.createItem(userId, itemDto);
     }
 
     @PatchMapping("/{itemId}")
     ResponseEntity<Object> updateItem(@PathVariable Long itemId, @RequestHeader("X-Sharer-User-Id") Long userId,
                                       @RequestBody ItemDto itemDto) {
-        log.info("Update item {}", itemId);
+        log.info("Данные вещи обновлены.");
         return itemClient.updateItem(userId, itemId, itemDto);
     }
 
     @GetMapping("/{itemId}")
     ResponseEntity<Object> getItemByUserId(@PathVariable Long itemId, @RequestHeader("X-Sharer-User-Id") Long userId) {
-        log.info("Get item by userId={}", userId);
+        log.info("Получена вещь с id: " + itemId);
         return itemClient.getItemByUserId(itemId, userId);
     }
 
@@ -43,7 +43,7 @@ public class ItemController {
     public ResponseEntity<Object> getItemListByUserId(@RequestHeader("X-Sharer-User-Id") Long userId,
                                                   @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
                                                   @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
-        log.info("Get all items from user {}", userId);
+        log.info("Получен список всех вещей пользователя с ID: " + userId);
         return itemClient.getItemListByUserId(userId, from, size);
     }
 
@@ -51,14 +51,14 @@ public class ItemController {
     public ResponseEntity<Object> search(@RequestParam String text,
                                                 @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
                                                 @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
-        log.info("Search items by text {}", text);
+        log.info("Найдена вещь по ключевому слову: " + text);
         return itemClient.search(text, from, size);
     }
 
     @PostMapping("/{itemId}/comment")
     public ResponseEntity<Object> saveComment(@RequestHeader("X-Sharer-User-Id") Long userId, @PathVariable Long itemId,
                                               @RequestBody @Valid CommentDto commentDto) {
-        log.info("Create comment from user {}", userId);
+        log.info("Комментарий от пользователя с id " + userId + "создан");
         return itemClient.saveComment(userId, itemId, commentDto);
     }
 }

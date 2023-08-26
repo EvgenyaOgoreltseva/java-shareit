@@ -1,7 +1,6 @@
 package ru.practicum.shareit.request;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -13,7 +12,6 @@ import javax.validation.constraints.PositiveOrZero;
 
 @Controller
 @RequiredArgsConstructor
-@Slf4j
 @RequestMapping("/requests")
 @Validated
 public class ItemRequestController {
@@ -23,13 +21,11 @@ public class ItemRequestController {
     @PostMapping
     ResponseEntity<Object> createItemRequest(@RequestHeader("X-Sharer-User-Id") Long userId,
                                            @Valid @RequestBody ItemRequestDto itemRequestDto) {
-        log.info("Create item request by user {}", userId);
         return itemRequestClient.createItemRequest(userId, itemRequestDto);
     }
 
     @GetMapping
     ResponseEntity<Object> getAllItemRequestByUserId(@RequestHeader("X-Sharer-User-Id") Long userId) {
-        log.info("Get all user {} item requests", userId);
         return itemRequestClient.getAllItemRequestByUserId(userId);
     }
 
@@ -42,7 +38,6 @@ public class ItemRequestController {
 
     @GetMapping("/{requestId}")
     ResponseEntity<Object> getItemRequestById(@RequestHeader("X-Sharer-User-Id") Long userId, @PathVariable Long requestId) {
-        log.info("Get item request {}", requestId);
         return itemRequestClient.getItemRequestById(requestId, userId);
     }
 }
