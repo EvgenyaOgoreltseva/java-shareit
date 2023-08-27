@@ -22,7 +22,7 @@ public class ItemRequestController {
 
     @PostMapping
     ResponseEntity<Object> createItemRequest(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                           @Valid @RequestBody ItemRequestDto itemRequestDto) {
+                                             @Valid @RequestBody ItemRequestDto itemRequestDto) {
         log.info("Item request created by user with id " + userId);
         return itemRequestClient.createItemRequest(userId, itemRequestDto);
     }
@@ -35,9 +35,9 @@ public class ItemRequestController {
 
     @GetMapping("/all")
     ResponseEntity<Object> getAllItemRequests(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                          @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
-                                          @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
-        log.info("Got List of item requests for user with id " + userId + "from " + from + "to " +size);
+                                              @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
+                                              @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
+        log.info("Got List of item requests for user with id " + userId + "from " + from + "to " + size);
         return itemRequestClient.getAllItemRequests(userId, from, size);
     }
 
